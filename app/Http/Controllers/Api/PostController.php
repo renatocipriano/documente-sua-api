@@ -138,6 +138,41 @@ class PostController extends Controller
      * @param  mixed $post
      * @return void
      */
+    /**
+     * @OA\Get(
+     *      path="/posts/{post}",
+     *      operationId="getPostById",
+     *      tags={"Posts"},
+     *      summary="Get post information",
+     *      description="Returns post data",
+     *      @OA\Parameter(
+     *          name="post",
+     *          description="Post id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      )
+     * )
+     */
+
     public function show(Post $post)
     {
         //return single post as a resource
