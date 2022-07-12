@@ -73,7 +73,7 @@ paths:
       parameters:
         -
           name: post
-          in: query
+          in: path
           description: 'Post id'
           required: true
           schema:
@@ -96,7 +96,7 @@ paths:
       parameters:
         -
           name: post
-          in: query
+          in: path
           description: 'Post id'
           required: true
           schema:

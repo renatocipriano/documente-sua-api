@@ -149,7 +149,7 @@ class PostController extends Controller
      *          name="post",
      *          description="Post id",
      *          required=true,
-     *          in="query",
+     *          in="path",
      *          @OA\Schema(
      *              type="integer"
      *          )
@@ -197,7 +197,7 @@ class PostController extends Controller
      *          name="post",
      *          description="Post id",
      *          required=true,
-     *          in="query",
+     *          in="path",
      *          @OA\Schema(
      *              type="integer"
      *          )
