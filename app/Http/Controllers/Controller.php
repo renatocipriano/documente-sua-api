@@ -30,8 +30,8 @@ class Controller extends BaseController
      * )
      *
      * @OA\Tag(
-     *     name="Products",
-     *     description="API Endpoints of Products"
+     *     name="Posts",
+     *     description="API Endpoints of Posts"
      * )
      */
 

@@ -52,6 +52,57 @@ class PostController extends Controller
      * @param  mixed $request
      * @return void
      */
+    /**
+     * @OA\Post(
+     *      path="/posts",
+     *      operationId="storePost",
+     *      tags={"Posts"},
+     *      summary="Store new post",
+     *      description="Returns post data",
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="File (jpeg,png,jpg,gif,svg)",
+     *                     property="image",
+     *                     type="string",
+     *                     format="file",
+     *                 ),
+     *                 @OA\Property(
+     *                     description="Title",
+     *                     property="title",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     description="Content",
+     *                     property="content",
+     *                     type="string"
+     *                 ),
+     *                 required={"image", "title", "content"}
+     *             ),
+     *         ),
+     *     ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+
     public function store(Request $request)
     {
         //define validation rules
