@@ -63,6 +63,74 @@ paths:
           description: Unauthenticated
         403:
           description: Forbidden
+  '/posts/{post}':
+    get:
+      tags:
+        - Posts
+      summary: 'Get post information'
+      description: 'Returns post data'
+      operationId: getPostById
+      parameters:
+        -
+          name: post
+          in: query
+          description: 'Post id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Successful operation'
+        400:
+          description: 'Bad Request'
+        401:
+          description: Unauthenticated
+        422:
+          description: 'Unprocessable Entity'
+    put:
+      tags:
+        - Posts
+      summary: 'Update existing post'
+      description: 'Returns updated post data'
+      operationId: updatePost
+      parameters:
+        -
+          name: post
+          in: query
+          description: 'Post id'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - image
+                - title
+                - content
+              properties:
+                image:
+                  description: 'File (jpeg,png,jpg,gif,svg)'
+                  type: string
+                  format: file
+                title:
+                  description: Title
+                  type: string
+                content:
+                  description: Content
+                  type: string
+              type: object
+      responses:
+        201:
+          description: 'Successful operation'
+        400:
+          description: 'Bad Request'
+        401:
+          description: Unauthenticated
+        422:
+          description: 'Unprocessable Entity'
 tags:
   -
     name: Posts

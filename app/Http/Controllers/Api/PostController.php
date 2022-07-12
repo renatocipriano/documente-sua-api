@@ -186,6 +186,66 @@ class PostController extends Controller
      * @param  mixed $post
      * @return void
      */
+    /**
+     * @OA\Put(
+     *      path="/posts/{post}",
+     *      operationId="updatePost",
+     *      tags={"Posts"},
+     *      summary="Update existing post",
+     *      description="Returns updated post data",
+     *      @OA\Parameter(
+     *          name="post",
+     *          description="Post id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="File (jpeg,png,jpg,gif,svg)",
+     *                     property="image",
+     *                     type="string",
+     *                     format="file",
+     *                 ),
+     *                 @OA\Property(
+     *                     description="Title",
+     *                     property="title",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     description="Content",
+     *                     property="content",
+     *                     type="string"
+     *                 ),
+     *                 required={"image", "title", "content"}
+     *             ),
+     *         ),
+     *     ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      )
+     * )
+     */
+
     public function update(Request $request, Post $post)
     {
         //define validation rules
