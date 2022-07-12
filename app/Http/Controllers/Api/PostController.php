@@ -295,6 +295,43 @@ class PostController extends Controller
      * @param  mixed $post
      * @return void
      */
+
+     /**
+     * @OA\Delete(
+     *      path="/posts/{post}",
+     *      operationId="deletePost",
+     *      tags={"Posts"},
+     *      summary="Delete existing post",
+     *      description="Deletes a record and returns no content",
+     *      @OA\Parameter(
+     *          name="post",
+     *          description="Post id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=204,
+     *          description="Successful operation",
+     *          @OA\JsonContent()
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+
     public function destroy(Post $post)
     {
         //delete image
