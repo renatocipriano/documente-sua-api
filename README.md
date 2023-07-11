@@ -1,64 +1,420 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Documente sua API Laravel com L5 Swagger
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Com a popularização do home office e o aumento na busca por novos desenvolvedores, as documentações de APIs se tornaram muito necessárias quando falamos sobre a divisão de equipes em Backend e Frontend.
 
-## About Laravel
+Sendo essencial para o controle de qualidade e processo, repasse de conhecimento e aumento da produtividade. Neste artigo apresentaremos para você o Laravel com L5 Swagger, uma biblioteca onde você poderá gerar sua documentação OpenAPI super interativa.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Iniciando seu projeto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Utilizaremos neste tutorial o projeto: [SantriKoding-com Laravel-9-Restful-API](https://github.com/SantriKoding-com/Laravel-9-Restful-API)  com a versão do Laravel 9 para os testes deste processo.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Para iniciarmos, em seu terminal execute os comandos abaixo:
 
-## Learning Laravel
+```
+git clone https://github.com/SantriKoding-com/Laravel-9-Restful-API.git documente-sua-api
+cd ./documente-sua-api
+cp .env.example .env
+composer install && npm install
+touch database/database.sqlite
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Configurando o ambiente
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Para fins didáticos utilizaremos o SQlite, sendo assim abra o arquivo .env e realize as seguintes alterações.
 
-## Laravel Sponsors
+```
+DB_CONNECTION=sqlite
+#DB_HOST=127.0.0.1
+#DB_PORT=3306
+#DB_DATABASE=laravel
+#DB_USERNAME=root
+#DB_PASSWORD=
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Rodando seu projeto
 
-### Premium Partners
+Esta é a etapa que deixaremos o ambiente Laravel funcionando. No seu terminal execute os comandos abaixo:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```
+php artisan key:generate
+php artisan storage:link
+php artisan migrate
+php artisan serve --port=8001
+```
 
-## Contributing
+![Ambiente Laravel](1-artisan_serve.png "Ambiente Laravel")
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Instalando e configurando o L5 Swagger
 
-## Code of Conduct
+Neste momento instalaremos o L5 Swagger, pois é uma combinação de Swagger-php e swagger-ui adaptado para trabalhar com Laravel e que é bem recomendado pela comunidade.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+No seu terminal execute os comandos abaixo:
 
-## Security Vulnerabilities
+```
+composer require darkaonline/l5-swagger
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Um novo arquivo de configuração foi criado config/l5-swagger.php, existem diversas opções, porém iremos alterar apenas algumas:
 
-## License
+- `Array documentations/default/api/title = 'Minha primeira documentação de API'`
+- `Array documentations/routes/api = 'api/documentacao'`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+![Print arquivo l5-swagger.php](2-l5-swagger-config.png "Print arquivo l5-swagger.php")
+
+Abra o arquivo .env e adicione as seguintes variáveis. Não esqueça de adicionar no .env.example, facilitará nas próximas instalações do seu projeto.
+
+```
+L5_SWAGGER_USE_ABSOLUTE_PATH=false # utiliza o caminho relativo
+L5_SWAGGER_GENERATE_ALWAYS=true # atualiza os arquivos ao acessar a documentação no navegador
+L5_SWAGGER_GENERATE_YAML_COPY=true # gera o arquivo .yaml
+L5_SWAGGER_CONST_HOST="http://localhost:8001/api" # host da sua api
+```
+
+![Print arquivo .env com novas variáveis](3-l5-swagger-env.png "Print arquivo .env com novas variáveis")
+
+## Mão na massa
+
+### Comentário/anotação: Global
+
+Com o L5 Swagger é possível adicionar comentários globais, para isso, utilizaremos o controller base do Laravel (porém o mesmo precisa ter uma rota registrada).
+
+Abra o arquivo `routes/api.php` e adicione o seguinte código:
+
+```
+<?php
+use Illuminate\Support\Facades\Route;
+
+//posts
+Route::apiResource('/posts', App\Http\Controllers\Api\PostController::class);
+
+// Adicione essa nova rota
+Route::get('/', [App\Http\Controllers\Controller::class,'checkStatus']);
+```
+
+Abra o arquivo `app/Http/Controllers/Controller.php` e adicione o seguinte código:
+
+- **version:** ***versão atual da sua API***
+- **title:** ***título da sua API***
+- **description:** ***descrição da sua API***
+- **@OA\Tag:** ***agrupador de endpoints***
+
+```
+class Controller extends BaseController
+{
+   /**
+   * @OA\Info(
+   *   version="1.0.0",
+   *   title="Laravel OpenApi Demo Documentation",
+   *   description="L5 Swagger OpenApi description",
+   *   @OA\Contact(
+   *       email="admin@admin.com"
+   *   ),
+   *   @OA\License(
+   *       name="Apache 2.0",
+   *       url="http://www.apache.org/licenses/LICENSE-2.0.html"
+   *   )
+   * )
+   *
+   * @OA\Server(
+   *   url=L5_SWAGGER_CONST_HOST,
+   *   description="Demo API Server"
+   * )
+   *
+   * @OA\Tag(
+   *   name="Posts",
+   *   description="API Endpoints of Posts"
+   * )
+   */
+   use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+
+   public function checkStatus()
+   {
+       return response(['status' => 'ok']);
+   }
+}
+```
+
+### Consultar todos os posts
+
+Abra o arquivo `app/Http/Controllers/Api/PostController.php` e adicione o seguinte código acima da função “index”:
+
+```
+/**
+* @OA\Get(
+*   path="/posts",
+*   operationId="getPostList",
+*   tags={"Posts"},
+*   summary="Get list of posts",
+*   description="Returns list of posts",
+*   @OA\Response(
+*       response=200,
+*       description="Successful operation",
+*       ),
+*   @OA\Response(
+*       response=401,
+*       description="Unauthenticated",
+*   ),
+*   @OA\Response(
+*       response=403,
+*       description="Forbidden"
+*   )
+* )
+*/
+public function index() {
+   // ...
+}
+```
+
+Neste ponto sua documentação já está funcional, para conferir basta acessar a url: http://localhost:8001/api/documentacao.
+
+Nesta tela listará as informações de configurações e o endpoint GET “posts”.
+
+Para testar basta clicar no botão ***Try out*** em seguida ***Execute*** (neste momento ainda não temos nenhum post cadastrado).
+
+![Print documentação](4-get-index.png "Print documentação")
+
+### Cadastrar um post
+
+Abra o arquivo `app/Http/Controllers/Api/PostController.php` e adicione o seguinte código acima da função “store”:
+
+```
+/**
+* @OA\Post(
+*   path="/posts",
+*   operationId="storePost",
+*   tags={"Posts"},
+*   summary="Store new post",
+*   description="Returns post data",
+*   @OA\RequestBody(
+*       required=true,
+*       @OA\MediaType(
+*           mediaType="multipart/form-data",
+*           @OA\Schema(
+*               @OA\Property(
+*                   description="File (jpeg,png,jpg,gif,svg)",
+*                   property="image",
+*                   type="string",
+*                   format="file",
+*               ),
+*               @OA\Property(
+*                   description="Title",
+*                   property="title",
+*                   type="string"
+*               ),
+*               @OA\Property(
+*                   description="Content",
+*                   property="content",
+*                   type="string"
+*               ),
+*               required={"image", "title", "content"}
+*           ),
+*       ),
+*   ),
+*   @OA\Response(
+*       response=201,
+*       description="Successful operation",
+*       ),
+*   @OA\Response(
+*       response=400,
+*       description="Bad Request"
+*   ),
+*   @OA\Response(
+*       response=401,
+*       description="Unauthenticated",
+*   ),
+*   @OA\Response(
+*       response=403,
+*       description="Forbidden"
+*   )
+* )
+*/
+public function store(Request $request) {
+   // ...
+}
+```
+
+### Consultar o detalhe de um post
+
+Abra o arquivo `app/Http/Controllers/Api/PostController.php` e adicione o seguinte código acima da função “show”:
+
+```
+/**
+* @OA\Get(
+*   path="/posts/{post}",
+*   operationId="getPostById",
+*   tags={"Posts"},
+*   summary="Get post information",
+*   description="Returns post data",
+*   @OA\Parameter(
+*       name="post",
+*       description="Post id",
+*       required=true,
+*       in="path",
+*       @OA\Schema(
+*           type="integer"
+*       )
+*   ),
+*   @OA\Response(
+*       response=200,
+*       description="Successful operation",
+*       ),
+*   @OA\Response(
+*       response=400,
+*       description="Bad Request"
+*   ),
+*   @OA\Response(
+*       response=401,
+*       description="Unauthenticated",
+*   ),
+*   @OA\Response(
+*       response=422,
+*       description="Unprocessable Entity"
+*   )
+* )
+*/
+public function show(Post $post) {
+   // ...
+}
+```
+
+### Atualizar um post
+
+Abra o arquivo `app/Http/Controllers/Api/PostController.php` e adicione o seguinte código acima da função “update”:
+
+> Observação: Como você perceberá abaixo nessa rota utilizaremos o método POST adicionando o atributo _method = PUT no corpo da requisição.
+
+> O PHP tem uma limitação que utilizando o PUT não é possível acessar os arquivos enviados, caso contrário utilize @OA\Put.
+
+#### Leia mais:
+
+- [How to use PUT method in Laravel API with File Upload](https://stackoverflow.com/questions/65008650/how-to-use-put-method-in-laravel-api-with-file-upload)
+- [PUT request data should be parsed just like POST](https://bugs.php.net/bug.php?id=55815)
+
+```
+/**
+* @OA\Post(
+*      path="/posts/{post}",
+*      operationId="updatePost",
+*      tags={"Posts"},
+*      summary="Update existing post",
+*      description="Returns updated post data",
+*      @OA\Parameter(
+*          name="post",
+*          description="Post id",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\RequestBody(
+*      required=true,
+*      @OA\MediaType(
+*          mediaType="multipart/form-data",
+*          @OA\Schema(
+*              @OA\Property(
+*                  description="File (jpeg,png,jpg,gif,svg)",
+*                  property="image",
+*                  type="string",
+*                  format="file",
+*              ),
+*              @OA\Property(
+*                  description="Title",
+*                  property="title",
+*                  type="string"
+*              ),
+*              @OA\Property(
+*                  description="Content",
+*                  property="content",
+*                  type="string"
+*              ),
+*              @OA\Property(
+*                  description="_method o valor deve ser PUT",
+*                  property="_method",
+*                  type="string"
+*              ),
+*              required={"image", "title", "content", "_method"}
+*          ),
+*      ),
+*  ),
+*      @OA\Response(
+*          response=201,
+*          description="Successful operation",
+*      ),
+*      @OA\Response(
+*          response=400,
+*          description="Bad Request"
+*      ),
+*      @OA\Response(
+*          response=401,
+*          description="Unauthenticated",
+*      ),
+*      @OA\Response(
+*          response=422,
+*          description="Unprocessable Entity"
+*      )
+* )
+*/
+public function update(Request $request, Post $post) {
+   // ...
+}
+```
+
+### Deletar um post
+
+Abra o arquivo `app/Http/Controllers/Api/PostController.php` e adicione o seguinte código acima da função “destroy”:
+
+```
+/**
+* @OA\Delete(
+*      path="/posts/{post}",
+*      operationId="deletePost",
+*      tags={"Posts"},
+*      summary="Delete existing post",
+*      description="Deletes a record and returns no content",
+*      @OA\Parameter(
+*          name="post",
+*          description="Post id",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\Response(
+*          response=204,
+*          description="Successful operation",
+*          @OA\JsonContent()
+*      ),
+*      @OA\Response(
+*          response=401,
+*          description="Unauthenticated",
+*      ),
+*      @OA\Response(
+*          response=403,
+*          description="Forbidden"
+*      ),
+*      @OA\Response(
+*          response=404,
+*          description="Resource Not Found"
+*      )
+* )
+*/
+public function destroy(Post $post) {
+   //...
+}
+```
+
+Basta acessar a url http://localhost:8001/api/documentacao, para que sua documentação seja atualizada.
+
+Agora basta compartilhar com a sua equipe o .json ou .yaml gerados pelo L5 Swagger.
+
+## Referências
+
+- [QuickAdminPanel.com — Laravel API Documentation with OpenAPI/Swagger](https://blog.quickadminpanel.com/laravel-api-documentation-with-openapiswagger)
+- [Github SantriKoding.com — Laravel 9 Restful API](https://github.com/SantriKoding-com/Laravel-9-Restful-API)
+- [Santrikoding.com — Tutorial Restful API di Laravel 9](https://santrikoding.com/tutorial-restful-api-di-laravel-9-1-cara-install-laravel-9)
+- [StackOverflow.com — How to use PUT method in Laravel API with File Upload](https://stackoverflow.com/questions/65008650/how-to-use-put-method-in-laravel-api-with-file-upload)
+- [Twilio.com — Criar e consumir uma API RESTful no PHP Laravel](https://www.twilio.com/blog/criar-e-consumir-uma-api-restful-no-php-laravel )
